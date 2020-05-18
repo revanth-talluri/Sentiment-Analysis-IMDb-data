@@ -48,6 +48,12 @@ from keras.layers.embeddings import Embedding
 from keras.layers.convolutional import Conv1D
 from keras.layers.convolutional import MaxPooling1D
 
+#Setting the seed
+np.random.seed(1234)
+import tensorflow as tf
+#tf.random.set_seed(1000)
+tf.set_random_seed(1000)
+
 
 def get_corpus(data):
     
@@ -165,7 +171,7 @@ test_df  = test_df.sample(frac=1, random_state=0).reset_index(drop=True)
 train_corpus = get_corpus(train_df)
 test_corpus  = get_corpus(test_df)
 
-
+#Tokenizing and embedding the train set
 all_words = []
 for sentence in train_corpus:
     tokenize_word = word_tokenize(sentence)
@@ -183,9 +189,9 @@ vocab_length = int(math.ceil(len(unique_words)/100)*100)
 embedded_sentences = [one_hot(sentence, vocab_length) for sentence in train_corpus]
 
 #plotting a box plot
-#print("Review length: ")
 result = [len(x) for x in train_corpus]
-print("Mean %.2f words (%f)" % (np.mean(result), np.std(result)))
+#print("Review length: ")
+#print("Mean %.2f words (%f)" % (np.mean(result), np.std(result)))
 # plot review length
 plt.boxplot(result)
 plt.show()
@@ -196,15 +202,12 @@ plt.show()
 
 #the embedding layer needs an input which doesn't vary everytime. Since reviews can be of
 #any length, let's pad the reviews and make all of them of same length
-word_count = lambda sentence: len(word_tokenize(sentence))
-longest_sentence = max(corpus, key=word_count)
-length_long_sentence = len(word_tokenize(longest_sentence))
 
 max_words = 2500
 #padded_sentences = pad_sequences(embedded_sentences, maxlen=max_words, padding='pre')
 train_pad = pad_sequences(embedded_sentences, maxlen=max_words, padding='post')
 
-
+#Tokenizing and embedding the test set
 all_words = []
 for sentence in test_corpus:
     tokenize_word = word_tokenize(sentence)
@@ -219,8 +222,8 @@ test_pad = pad_sequences(embedded_sentences, maxlen=max_words, padding='post')
 x_train, y_train = train_pad, train_df['Rating']
 x_test, y_test = test_pad, test_df['Rating']
  
-#%%   
-#building the nueral network
+ 
+#building the ANN model
 model = Sequential()
 model.add(Embedding(vocab_length, 32, input_length=max_words))
 model.add(Flatten())
@@ -230,19 +233,15 @@ model.add(Dense(1, activation='sigmoid'))
 
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 #print(model.summary()) 
-
-start_time = time.time()        
+        
 model.fit(x_train, y_train, batch_size=500, epochs=5,
           validation_data=(x_test, y_test), verbose=1)
 
 loss, accuracy = model.evaluate(x_test, y_test, verbose=0)
-print('Accuracy: {}'.format(accuracy*100))
+print('Accuracy for ANN model is: {}'.format(accuracy*100))
 
-elapsed_time = time.time() - start_time
-print(elapsed_time)
 
-#%%
-
+#building the CNN model
 model = Sequential()
 model.add(Embedding(vocab_length, 32, input_length=max_words))
 model.add(Conv1D(filters=32, kernel_size=3, padding='same', activation='relu'))
@@ -255,13 +254,10 @@ model.add(Dense(1, activation='sigmoid'))
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 #model.summary()
 
-start_time = time.time()  
+ 
 model.fit(x_train, y_train, batch_size=500, epochs=5,
           validation_data=(x_test, y_test), verbose=1)
 
 loss, accuracy = model.evaluate(x_test, y_test, verbose=0)
-print('Accuracy: {}'.format(accuracy*100))
-     
-elapsed_time = time.time() - start_time
-print(elapsed_time)
+print('Accuracy for CNN model is: {}'.format(accuracy*100))
 
