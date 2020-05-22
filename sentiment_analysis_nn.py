@@ -60,7 +60,7 @@ def get_corpus(data):
     corpus = []
     spell  = SpellChecker()
     for i in range(0, len(data)):
-        review = re.sub('[^a-zA-Z]', ' ', data['Review'][i])
+        review = re.sub('[^a-zA-Z]', ' ', data[i])
         review = review.lower()
         review = review.split()
         #ps = PorterStemmer()
@@ -168,8 +168,8 @@ test_df  = test_df.sample(frac=1, random_state=0).reset_index(drop=True)
 
     
 #building a corpus of our train and test data
-train_corpus = get_corpus(train_df)
-test_corpus  = get_corpus(test_df)
+train_corpus = get_corpus(train_df['Review'])
+test_corpus  = get_corpus(test_df['Review'])
 
 #Tokenizing and embedding the train set
 all_words = []
@@ -254,7 +254,6 @@ model.add(Dense(1, activation='sigmoid'))
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 #model.summary()
 
- 
 model.fit(x_train, y_train, batch_size=500, epochs=5,
           validation_data=(x_test, y_test), verbose=1)
 
