@@ -5,7 +5,9 @@ Some of the famous applications of NLP are Speech Recognition, Chatbots, Text Cl
 
 Sentimental Analysis is the interpretation and classification of emotions within text data. Sentiment analysis (also known as opinion mining or emotion AI) refers to the use of natural language processing, text analysis, computational linguistics, and biometrics to systematically identify, extract, quantify, and study affective states and subjective information (Source: Wikipedia).
 
-The dataset taken here is from the [Stanford Imdb dataset](https://ai.stanford.edu/~amaas/data/sentiment/). The dataset contains a total of 50,000 reviews from Imdb with 50/50 split between train and test sets. And within each of these, we have 50/50 split for positive and negative reviews. Let's have a look at how we can use this data and predict whether if a review is positive or negative. We will be using Deep Learning techniques (Artificial Nueral Networks and Convolution Nueral Networks) to predict the sentiment. There are 5 main steps involved here.
+The dataset taken here is from the [Stanford Imdb dataset](https://ai.stanford.edu/~amaas/data/sentiment/). The dataset contains a total of 50,000 reviews from Imdb with 50/50 split between train and test sets. And within each of these, we have 50/50 split for positive and negative reviews. Let's have a look at how we can use this data and predict whether if a review is positive or negative. We will be using Deep Learning techniques (Artificial Nueral Networks and Convolution Nueral Networks) to predict the sentiment. Please note that the dataset is not loaded here. After getting the dataset from the above link, rename the dataset folder to 'Stanford-reviews' and place the folder in the path where the script file is running.
+
+There are 5 main steps involved here. 
 
 - Reading the .txt files and putting them in a dataframe
 - Preparing the corpus for train and test set
