@@ -6,8 +6,8 @@ Created on Mon May 18 17:33:15 2020
 
 #Importing libraries
 import glob
-import os
-
+import os, sys
+from pathlib import Path, PureWindowsPath
 import numpy as np
 from numpy import array
 import math
@@ -51,10 +51,11 @@ from keras.layers.convolutional import MaxPooling1D
 #Setting the seed
 np.random.seed(1234)
 import tensorflow as tf
-#tf.random.set_seed(1000)
-tf.set_random_seed(1000)
+tf.random.set_seed(1000)
+#tf.set_random_seed(1000)
 
 
+#this function will return the 'corpus' of the given data
 def get_corpus(data):
     
     corpus = []
@@ -72,8 +73,8 @@ def get_corpus(data):
         
     return corpus
 
-
-
+'''
+#builds the 'ANN' model
 def build_ann(x_train,y_train,x_test,y_test,vocab_length,max_words):
     
     #building the nueral network
@@ -95,6 +96,7 @@ def build_ann(x_train,y_train,x_test,y_test,vocab_length,max_words):
     return accuracy*100, model
     
 
+#builds the 'CNN' model
 def build_cnn(x_train,y_train,x_test,y_test,vocab_length,max_words):
     
     #building the nueral network
@@ -117,44 +119,64 @@ def build_cnn(x_train,y_train,x_test,y_test,vocab_length,max_words):
     #print('Accuracy: {}'.format(accuracy*100))
     
     return accuracy*100, model
+'''
 
-
+'''
+This is our 'main' function
+'''
     
 #Putting all the filenames in a list and reading them into a list
 #there are a total of 12500 review in each folder
-os.chdir(r'C:\Users\revan\Downloads\Git\Stanford-review\Stanford-reviews\train\pos')
-train_pos = glob.glob('*.txt')
+
+BASE_PATH = os.getcwd()
+data_folder  = Path(os.getcwd())
+
+file_to_open = data_folder / 'Stanford-reviews/train/pos'
+os.chdir(file_to_open)
+train_pos = glob.glob('*.txt') #gives the names of all .txt files in that folder
 train_files = []
 for filename in train_pos:
     with open(filename, "r", encoding="utf8") as file:
         train_files.append(file.read())
 
-os.chdir(r'C:\Users\revan\Downloads\Git\Stanford-review\Stanford-reviews\train\neg')
+#Changing the path back to the script path 
+os.chdir(BASE_PATH) 
+
+file_to_open = data_folder / 'Stanford-reviews/train/neg'
+os.chdir(file_to_open)
 train_neg = glob.glob('*.txt')
 for filename in train_neg:
     with open(filename, "r", encoding="utf8") as file:
         train_files.append(file.read())
 
-os.chdir(r'C:\Users\revan\Downloads\Git\Stanford-review\Stanford-reviews\test\pos')
+os.chdir(BASE_PATH)
+
+file_to_open = data_folder / 'Stanford-reviews/test/pos'
+os.chdir(file_to_open)
 test_pos = glob.glob('*.txt')
 test_files = []
 for filename in test_pos:
     with open(filename, "r", encoding="utf8") as file:
         test_files.append(file.read())
     
-os.chdir(r'C:\Users\revan\Downloads\Git\Stanford-review\Stanford-reviews\test\neg')
+os.chdir(BASE_PATH)
+
+file_to_open = data_folder / 'Stanford-reviews/test/neg'
+os.chdir(file_to_open)
 test_neg = glob.glob('*.txt')
 for filename in test_neg:
     with open(filename, "r", encoding="utf8") as file:
         test_files.append(file.read())
     
 #Resetting the path to our script location
-os.chdir(r'C:\Users\revan\Downloads\Git\Stanford-review')
+os.chdir(BASE_PATH)
 
 #from above, we can see that the first 12500 reviews are positive and next 12500 reviews 
 #are negative and this is the case with both our train and test sets 
 pos = list(np.ones(12500))
 neg = list(np.zeros(12500))
+
+#the 'rating' will be our target column
 rating = [*pos, *neg] #concanating the two lists with 'pos' at start 
 
 train_df = pd.DataFrame({'Review':train_files, 'Rating':rating})
@@ -192,11 +214,10 @@ embedded_sentences = [one_hot(sentence, vocab_length) for sentence in train_corp
 result = [len(x) for x in train_corpus]
 #print("Review length: ")
 #print("Mean %.2f words (%f)" % (np.mean(result), np.std(result)))
-# plot review length
 plt.boxplot(result)
 plt.show()
 
-#looking a box and whisker plot for the review lengths in words, we can probably see 
+#looking at box and whisker plot for the review lengths in words, we can probably see 
 #an exponential distribution that we can probably cover the mass of the distribution 
 #with a clipped length of 2500 words.
 
