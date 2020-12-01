@@ -1,4 +1,4 @@
-# Sentimental Analysis on Imdb reviews using Deep Learning
+# Sentimental Analysis on IMDb reviews using Deep Learning
 Natural Language Processing (NLP) is one of the fastest growing research areas in the Machine Learning field. Interest in NLP began in the early 1950's when Alan Turing published his paper '[Computing Machinery and Intelligence](https://academic.oup.com/mind/article/LIX/236/433/986238)' and from which the famous [Turing-test](https://en.wikipedia.org/wiki/Turing_test) emerged. With the ongoing growth in online activity, huge amount of data is generated everyday. And since most of this data is unstructured, it is quite difficult to draw meaningful insights from it. And this is where NLP comes in. The NLP techniques help machine understand the information and increases the efficiency.
 
 Some of the famous applications of NLP are Speech Recognition, Chatbots, Text Classification, Sentimental Analysis etc. Let's see an application of Sentimental Analysis here.
